@@ -12,11 +12,13 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-512.png">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .topbar { padding-top: calc(11px + env(safe-area-inset-top, 0px)) !important; }
+    .content { padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px)); }
+  </style>
 </head>
 <body>
-  <div id="loading">
-    <div class="loading-text">Awakening...</div>
-  </div>
+  <div id="loading"><div class="loading-text">Awakening...</div></div>
   <div id="toast" class="toast"></div>
   <div id="app">
     <div class="world">
@@ -39,19 +41,9 @@
   </div>
   <script src="app.js"></script>
   <script>
-    // Generate motes
-    var world = document.querySelector('.world');
-    for (var i = 0; i < 8; i++) {
-      var mote = document.createElement('div');
-      mote.className = 'mote';
-      var size = Math.random() * 2.5 + 0.5;
-      mote.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+Math.random()*100+'%;bottom:0;animation-duration:'+(Math.random()*20+12)+'s;animation-delay:'+(Math.random()*12)+'s';
-      world.appendChild(mote);
-    }
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(function(){});
-    }
+    var world=document.querySelector('.world');
+    for(var i=0;i<8;i++){var mote=document.createElement('div');mote.className='mote';var size=Math.random()*2.5+0.5;mote.style.cssText='width:'+size+'px;height:'+size+'px;left:'+Math.random()*100+'%;bottom:0;animation-duration:'+(Math.random()*20+12)+'s;animation-delay:'+(Math.random()*12)+'s';world.appendChild(mote);}
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(function(){});
   </script>
 </body>
 </html>
