@@ -1,10 +1,12 @@
 const CACHE = 'azrael-v1';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/app.js',
-  '/manifest.json',
+  '/Azrael/',
+  '/Azrael/index.html',
+  '/Azrael/styles.css',
+  '/Azrael/app.js',
+  '/Azrael/manifest.json',
+  '/Azrael/icon-192.png',
+  '/Azrael/icon-512.png',
 ];
 
 self.addEventListener('install', e => {
@@ -20,7 +22,6 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Cache first for app assets, network first for Google Fonts
   if (e.request.url.includes('fonts.googleapis') || e.request.url.includes('fonts.gstatic')) {
     e.respondWith(
       caches.open(CACHE).then(cache =>
