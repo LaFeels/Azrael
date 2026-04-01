@@ -247,7 +247,7 @@ const newRank = Math.floor(newPts / SKILL_PTS_PER_RANK) + 1;
 if (newRank > oldRank) {
 // New rank reached
 if (SKILL_MILESTONE_RANKS.includes(newRank)) {
-return { rank: newRank, title: PILLAR_RANK_TITLES[skill]?.[newRank], unlock: SKILL_RANK_UNLOCKS[skill]?.[newRank] };
+return { rank: newRank, title: (PILLAR_RANK_TITLES[skill] && PILLAR_RANK_TITLES[skill][newRank]), unlock: (SKILL_RANK_UNLOCKS[skill] && SKILL_RANK_UNLOCKS[skill][newRank]) };
 }
 return { rank: newRank, title: null, unlock: null };
 }
@@ -326,7 +326,7 @@ const newStreak = wasYesterday ? state.streak + 1 : 0;
 if (state.lastReset && state.pendingMiss.length > 0) {
   state.pendingMiss.forEach(eid => {
     if (!state.missedCore.find(m => m.date === state.lastReset && m.edictId === eid)) {
-      state.missedCore.push({ date: state.lastReset, edictId: eid, label: CORE_EDICTS.find(c=>c.id===eid)?.label || eid, note: '[No explanation given]' });
+      state.missedCore.push({ date: state.lastReset, edictId: eid, label: CORE_EDICTS.find(c=>c.id===eid) && CORE_EDICTS.find(c=>c.id===eid).label || eid, note: '[No explanation given]' });
     }
   });
 }
@@ -486,7 +486,7 @@ partial.textContent = `+${earned} SF`;
 
 function recordMissedCore(edictId, note) {
 const today = new Date().toDateString();
-state.missedCore.push({ date: today, edictId, label: CORE_EDICTS.find(c=>c.id===edictId)?.label || edictId, note });
+state.missedCore.push({ date: today, edictId, label: (CORE_EDICTS.find(c=>c.id===edictId) ? CORE_EDICTS.find(c=>c.id===edictId).label : edictId) || edictId, note });
 state.pendingMiss = state.pendingMiss.filter(id => id !== edictId);
 state.dailyDone.push(edictId + ‘_missed’);
 saveState();
@@ -555,8 +555,8 @@ if (earned) earned.textContent = `✦ +${Math.floor((timerSeconds/60)/5)*3} SF e
 
 /* ── JOURNAL ── */
 function saveJournal() {
-const journalText = document.getElementById(‘journal-text’)?.value || ‘’;
-const reflectText = document.getElementById(‘reflect-text’)?.value || ‘’;
+const journalText = (document.getElementById(‘journal-text’) ? document.getElementById(‘journal-text’).value : ‘’) || ‘’;
+const reflectText = (document.getElementById(‘reflect-text’) ? document.getElementById(‘reflect-text’).value : ‘’) || ‘’;
 const xpEarned = Math.floor((journalText.length > 20 ? 8 : 0) + (reflectText.length > 20 ? 10 : 0));
 
 state.todayJournal = journalText;
@@ -962,7 +962,7 @@ ${entry.reflect ? `<div style="font-family:'Crimson Pro',serif;font-size:12px;fo
 `).join('')} `;
 
 // ── GOALS TAB ──
-document.getElementById(‘tab-goals’).innerHTML = `<div class="sh"><div class="sh-bar"></div><div class="sh-title">Covenants</div><div class="sh-line"></div></div> <div style="font-size:14px;color:var(--t3);font-style:italic;margin-bottom:16px;line-height:1.5">That which Azrael has sworn to himself.</div> <div class="sh" style="margin-bottom:10px"><div class="sh-bar"></div><div class="sh-title">Marked Moments</div><div class="sh-line"></div></div> ${[ { key:'day100', icon:'🔥', name:'Day 100', desc:'The first real milestone', check:() => daysRunning >= 100, date:state.milestones?.day100 }, { key:'firstRank5', icon:'⚡', name:'First Rank 5', desc: state.milestones?.firstRank5 ? PILLARS[state.milestones.firstRank5.pillar]?.name : 'Any pillar reaches Rank 5', check:() => !!state.milestones?.firstRank5, date:state.milestones?.firstRank5?.date }, { key:'firstCovenant', icon:'✦', name:'First Covenant Fulfilled', desc: state.milestones?.firstCovenant?.name || 'Complete your first goal', check:() => !!state.milestones?.firstCovenant, date:state.milestones?.firstCovenant?.date }, ].map(m => { const earned = m.check(); return`
+document.getElementById(‘tab-goals’).innerHTML = `<div class="sh"><div class="sh-bar"></div><div class="sh-title">Covenants</div><div class="sh-line"></div></div> <div style="font-size:14px;color:var(--t3);font-style:italic;margin-bottom:16px;line-height:1.5">That which Azrael has sworn to himself.</div> <div class="sh" style="margin-bottom:10px"><div class="sh-bar"></div><div class="sh-title">Marked Moments</div><div class="sh-line"></div></div> ${[ { key:'day100', icon:'🔥', name:'Day 100', desc:'The first real milestone', check:() => daysRunning >= 100, date:(state.milestones && state.milestones.day100) }, { key:'firstRank5', icon:'⚡', name:'First Rank 5', desc: (state.milestones && state.milestones.firstRank5) ? (PILLARS[state.milestones.firstRank5.pillar] && PILLARS[state.milestones.firstRank5.pillar].name) : 'Any pillar reaches Rank 5', check:() => !!(state.milestones && state.milestones.firstRank5), date:(state.milestones && state.milestones.firstRank5 && state.milestones.firstRank5.date) }, { key:'firstCovenant', icon:'✦', name:'First Covenant Fulfilled', desc: (state.milestones && state.milestones.firstCovenant && state.milestones.firstCovenant.name) || 'Complete your first goal', check:() => !!(state.milestones && state.milestones.firstCovenant), date:(state.milestones && state.milestones.firstCovenant && state.milestones.firstCovenant.date) }, ].map(m => { const earned = m.check(); return`
 <div class="milestone-badge ${earned?'':'locked'}">
 <span class="milestone-badge-icon">${m.icon}</span>
 <div>
