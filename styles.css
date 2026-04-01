@@ -82,7 +82,7 @@ html, body { min-height: 100vh; background: #100c06; overscroll-behavior: none; 
   position: sticky; top: 0; z-index: 100;
   background: rgba(10,7,3,0.96);
   border-bottom: 1px solid rgba(120,80,25,0.4);
-  padding: 50px 18px 9px;
+  padding: 11px 18px 9px;
   display: flex; justify-content: space-between; align-items: center;
   backdrop-filter: blur(16px);
   box-shadow: 0 2px 24px rgba(0,0,0,0.6);
