@@ -761,7 +761,7 @@ const fillPct = todayEdicts.length > 0 ? (doneCount / todayEdicts.length) * 100 
 const daysRunning = daysSince(state.startDate);
 
 // ── STATUS TAB ──
-document.getElementById(‘tab-status’).innerHTML = `<div class="hero"> <div class="orn tl"></div><div class="orn tr"></div><div class="orn bl"></div><div class="orn br"></div> <div class="hero-bg-rune">Az</div> <div class="player-eyebrow">[ Player Status ]</div> <div class="player-name">AZRAEL</div> <div class="player-class">Fallen Angel · ${RANKS[Math.min(level-1,RANKS.length-1)]}</div> <div class="level-block"> <div class="level-num">${level}</div> <div class="level-meta"> <div class="level-tag">Ascension Level</div> <div class="level-title">${RANKS[Math.min(level-1,RANKS.length-1)]}</div> <div class="level-sub">${currentXP} / ${toNext} SF to ascend</div> </div> </div> <div class="xp-wrap"> <div class="xp-head"> <span>Soul Fragments</span> <span>${maxed ? 'MAX LEVEL' : currentXP + ' / ' + toNext}</span> </div> <div class="xp-track"><div class="xp-fill" style="width:${maxed ? 100 : xpPct}%"></div></div> ${maxed ? '<div style="font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:var(--g2);text-align:center;margin-top:6px">✦ The Eternal ✦</div>' : ''} </div> <div class="stat-grid"> ${Object.entries(PILLARS).map(([k,pl]) =>`
+document.getElementById(‘tab-status’).innerHTML = `<div class="hero"> <div class="orn tl"></div><div class="orn tr"></div><div class="orn bl"></div><div class="orn br"></div> <div class="hero-bg-rune">Az</div> <div class="player-eyebrow">[ Player Status ]</div> <div class="player-name">AZRAEL</div> <div class="player-class">Fallen Angel · ${RANKS[Math.min(level-1,RANKS.length-1)]}</div> <div class="level-block"> <div class="level-num">${level}</div> <div class="level-meta"> <div class="level-tag">Ascension Level</div> <div class="level-title">${RANKS[Math.min(level-1,RANKS.length-1)]}</div> <div class="level-sub">${currentXP} / ${toNext} SF to ascend</div> </div> </div> <div class="xp-wrap"> <div class="xp-head"> <span>Soul Fragments</span> <span id="xp-display"></span> </div> <div class="xp-track"><div class="xp-fill" id="xp-fill-bar"></div></div> <div id="xp-maxed-msg" style="display:none;font-family:Cinzel,serif;font-size:9px;letter-spacing:2px;color:var(--g2);text-align:center;margin-top:6px">✦ The Eternal ✦</div> </div> <div class="stat-grid"> ${Object.entries(PILLARS).map(([k,pl]) =>`
 <div class="stat-cell">
 <span class="stat-em">${pl.icon}</span>
 <span class="stat-lbl">${pl.short}</span>
@@ -825,6 +825,14 @@ document.getElementById(‘tab-status’).innerHTML = `<div class="hero"> <div c
 ```
 
 `;
+
+// Update XP display elements separately (avoids template literal issues)
+const xpDisplay = document.getElementById(‘xp-display’);
+if (xpDisplay) xpDisplay.textContent = maxed ? ‘MAX LEVEL’ : (currentXP + ’ / ’ + toNext);
+const xpBar = document.getElementById(‘xp-fill-bar’);
+if (xpBar) xpBar.style.width = (maxed ? 100 : xpPct) + ‘%’;
+const xpMaxed = document.getElementById(‘xp-maxed-msg’);
+if (xpMaxed) xpMaxed.style.display = maxed ? ‘block’ : ‘none’;
 
 // ── EDICTS TAB ──
 const coreHTML = CORE_EDICTS.map(e => renderEdictCard(e)).join(’’);
@@ -894,7 +902,7 @@ document.getElementById(‘tab-codex’).innerHTML = `<div class="sh"><div class
 <span>Rank ${r} · ${pts} SF</span>
 <span>${Math.round(p)}% → Rank ${r+1}</span>
 </div>
-${PILLAR_RANK_TITLES[key]?.[r] ? `<div style="margin-top:6px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--g2)">${PILLAR_RANK_TITLES[key][r]}</div>` : ‘’}
+${(PILLAR_RANK_TITLES[key] && PILLAR_RANK_TITLES[key][r]) ? ‘<div style="margin-top:6px;font-family:Cinzel,serif;font-size:9px;letter-spacing:1.5px;color:var(--g2)">’ + PILLAR_RANK_TITLES[key][r] + ‘</div>’ : ‘’}
 ${totalFocus > 0 ? `<div style="margin-top:5px;font-family:'Crimson Pro',serif;font-size:11px;font-style:italic;color:var(--t3)">${formatMins(totalFocus)} logged lifetime</div>` : ‘’}
 </div>
 </div>
