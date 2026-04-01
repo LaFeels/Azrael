@@ -1497,21 +1497,47 @@ document.body.appendChild(overlay);
 const origOpenModal = openModal;
 }
 
-function init() {
-loadState();
-checkDailyReset();
-
-// Build static shell
-buildStaticUI();
-
-// Initial render
-render();
-
-// Hide loading screen
-setTimeout(() => {
+function hideLoading() {
 const loading = document.getElementById(‘loading’);
 if (loading) loading.style.display = ‘none’;
-}, 600);
+}
+
+function init() {
+// Always hide loading after 3s max no matter what
+setTimeout(hideLoading, 3000);
+
+try {
+loadState();
+// Clear any pending notifications that may have been saved mid-session
+delete state._pendingLevelUp;
+delete state._pendingMilestone;
+} catch(e) {
+console.error(‘loadState failed:’, e);
+state = { …DEFAULT_STATE };
+}
+
+try {
+checkDailyReset();
+} catch(e) {
+console.error(‘checkDailyReset failed:’, e);
+}
+
+try {
+buildStaticUI();
+} catch(e) {
+console.error(‘buildStaticUI failed:’, e);
+hideLoading();
+return;
+}
+
+try {
+render();
+} catch(e) {
+console.error(‘render failed:’, e);
+}
+
+// Hide loading screen
+setTimeout(hideLoading, 400);
 
 // Patch openModal to update journal prompt
 const _open = openModal;
