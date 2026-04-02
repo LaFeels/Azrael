@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Azrael">
+  <meta name="theme-color" content="#100c06">
+  <meta name="description" content="Azrael's Chronicle — A life gamification system for the soul">
+  <title>Azrael's Chronicle</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .topbar { padding-top: calc(11px + env(safe-area-inset-top, 0px)) !important; }
+    .content { padding-bottom: calc(130px + env(safe-area-inset-bottom, 0px)); }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="loading-text">Awakening...</div></div>
+  <div id="toast" class="toast"></div>
+  <div id="app">
+    <div class="world">
+      <div class="world-g"></div>
+      <div class="soul-light" style="width:300px;height:300px;background:radial-gradient(circle,rgba(90,40,160,0.6),transparent);top:-80px;left:50%;transform:translateX(-50%);animation-duration:6s"></div>
+      <div class="soul-light" style="width:200px;height:200px;background:radial-gradient(circle,rgba(80,50,15,0.5),transparent);bottom:100px;right:-40px;animation-duration:8s;animation-delay:2s"></div>
+    </div>
+    <div class="topbar">
+      <div>
+        <div class="topbar-eyebrow">Chronicle of</div>
+        <div class="topbar-name">Azrael</div>
+      </div>
+      <div class="sf-pill">
+        <div class="sf-gem"></div>
+        <div class="sf-val" id="sf-display">0 SF</div>
+      </div>
+    </div>
+    <nav class="nav" id="main-nav"></nav>
+    <div class="content" id="main-content"></div>
+  </div>
+
+  <script>
+    /* Unregister ALL old service workers first, then load the app */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        var unregPromises = regs.map(function(r) { return r.unregister(); });
+        return Promise.all(unregPromises);
+      }).then(function() {
+        /* Re-register fresh */
+        return navigator.serviceWorker.register('./sw.js');
+      }).catch(function() {});
+    }
+  </script>
+  <script src="app.js"></script>
+  <script>
+    var world = document.querySelector('.world');
+    for (var i = 0; i < 8; i++) {
+      var mote = document.createElement('div');
+      mote.className = 'mote';
+      var size = Math.random() * 2.5 + 0.5;
+      mote.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+Math.random()*100+'%;bottom:0;animation-duration:'+(Math.random()*20+12)+'s;animation-delay:'+(Math.random()*12)+'s';
+      world.appendChild(mote);
+    }
+  </script>
+</body>
+</html>
