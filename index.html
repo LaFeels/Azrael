@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +8,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Azrael">
   <meta name="theme-color" content="#100c06">
-  <meta name="description" content="Azrael's Chronicle — A life gamification system for the soul">
   <title>Azrael's Chronicle</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-512.png">
@@ -41,18 +41,18 @@
   </div>
 
   <script>
-    /* Unregister ALL old service workers first, then load the app */
+    /* Kill all service workers — they cause more problems than they solve */
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function(regs) {
-        var unregPromises = regs.map(function(r) { return r.unregister(); });
-        return Promise.all(unregPromises);
-      }).then(function() {
-        /* Re-register fresh */
-        return navigator.serviceWorker.register('./sw.js');
-      }).catch(function() {});
+        for (var i = 0; i < regs.length; i++) regs[i].unregister();
+      });
     }
   </script>
-  <script src="app.js"></script>
+
+  <!-- Cache bust: every time you update app.js, increment ?v=N below -->
+
+  <script src="app.js?v=8"></script>
+
   <script>
     var world = document.querySelector('.world');
     for (var i = 0; i < 8; i++) {
@@ -63,5 +63,6 @@
       world.appendChild(mote);
     }
   </script>
+
 </body>
 </html>
